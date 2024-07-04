@@ -16,11 +16,15 @@ class Kund:
         self.email = email
         self.phone = phone
 
-
-
 # Ange sökvägen till din CSV-fil och Word-mall
 kunddata = 'kunddata.csv'
 template = 'nv4.docx'
+
+with open(kunddata, mode='r', encoding='utf-8') as csvfile:
+    csvreader = csv.reader(csvfile)
+    for row in csvreader:
+        print(f"Row data: {row}")  # Debug print to check the row content
+
 
 # Ladda Word-mallen
 doc = Document(template)
@@ -73,6 +77,7 @@ with open(kunddata, newline='', encoding='utf-8') as csvfile:
             continue  # Hoppa över denna rad och fortsätt med nästa
 
         # Duplicera innehållet i Word-mallen på en ny sida för varje kund
+    
         duplicate_content_on_new_page(doc, Document(template))
         
 
