@@ -1,9 +1,21 @@
+import os
 import csv
-from datetime import datetime
+import datetime
 from docx import Document
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.shared import RGBColor
+
+# Get the directory of the current script
+script_dir = os.path.dirname(os.path.realpath(__file__))
+
+# Construct the paths to the dependencies relative to the script's location
+kunddata_path = os.path.join(script_dir, 'kunddata.csv')
+template_path = os.path.join(script_dir, 'nv4.docx')
+
+# Use these paths in your script
+kunddata = kunddata_path
+template = template_path
 
 class Kund:
     def __init__(self, kundnr, fornamn, efternamn, adress1, adress21, adress22, email, phone):
@@ -16,22 +28,14 @@ class Kund:
         self.email = email
         self.phone = phone
 
-# Ange sökvägen till din CSV-fil och Word-mall
-kunddata = 'kunddata.csv'
-template = 'nv4.docx'
-
-with open(kunddata, mode='r', encoding='utf-8') as csvfile:
-    csvreader = csv.reader(csvfile)
-    for row in csvreader:
-        print(f"Row data: {row}")  # Debug print to check the row content
+kunddata = kunddata_path # Härifrån hämtar vi kunddata
+template = template_path # Här fyller vi i dem
+outputDocument = Document(template) # Definiera en output-fil från Word-mallen
+kund_list = []  # Kundobjekt lagras här
+today = datetime.date.today().strftime("%Y-%m-%d") # Correct way to get today's date
 
 
-# Ladda Word-mallen
-doc = Document(template)
-
-# Funktion för att duplicera innehållet i en Word-mall och lägga till det på en ny sida
-
-def duplicate_content_on_new_page(document, template):
+def duplicate_content_on_new_page(document, template): # Duplicera innehållet i mallen  på en ny sida
     document.add_page_break()
 
     for paragraph in template.paragraphs:
@@ -65,26 +69,40 @@ def duplicate_content_on_new_page(document, template):
             for idx, cell in enumerate(row.cells):
                 new_row.cells[idx].text = cell.text
 
-# Öppna CSV-filen och läs in datan
-with open(kunddata, newline='', encoding='utf-8') as csvfile:
-    customerdata = csv.reader(csvfile, delimiter='\t')
-    for row in customerdata:
-        try:
-            # Skapa en instans av Kund för varje rad
-            kund = Kund(*row)
-        except ValueError:
-            print(f"Fel format på rad: {row}")
-            continue  # Hoppa över denna rad och fortsätt med nästa
-
-        # Duplicera innehållet i Word-mallen på en ny sida för varje kund
-    
-        duplicate_content_on_new_page(doc, Document(template))
+with open(kunddata, mode='r', encoding='utf-8') as csvfile:
+    csvreader = csv.reader(csvfile, delimiter='\t')  # Use tab as delimiter
+    for row in csvreader:
+        kund = Kund(*row)  # Gör en kund av varje rad i CSV-filen
+        kund.fornamn = kund.fornamn.title()
+        kund.efternamn = kund.efternamn.title()
+        kund.adress1 = kund.adress1.title()
+        if "lgh" in kund.adress1.lower():
+            kund.adress1 = kund.adress1.replace("Lgh", "lgh")
+        kund.adress21 = kund.adress21.replace(" ", "")
+        if len(kund.adress21) > 3:  
+            kund.adress21 = kund.adress21[:3] + " " + kund.adress21[3:] # Lägg till mellanslag efter de första tre siffrorna
+        kund.adress22 = kund.adress22.title()
+            
+        kund_list.append(kund)
+        duplicate_content_on_new_page(outputDocument, Document(template))   
         
+        for paragraph in outputDocument.paragraphs:  # Loop through all paragraphs in the document
+            for run in paragraph.runs:  # Iterate through each run in the paragraph
+                placeholders = {"{fornamn}": kund.fornamn, "{efternamn}": kund.efternamn}
+                for placeholder, replacement in placeholders.items():
+                    if placeholder in run.text:
+                        run.text = run.text.replace(placeholder, replacement)
+                        print(f"Replaced {placeholder} with {replacement} in run text: {run.text}")
 
-
-		# Här kan du lägga till kod för att anpassa det duplicerade innehållet
-		# baserat på kunddata, t.ex. ersätta platshållartext med faktiska värden
+                if "{adress1}" in run.text:
+                    run.text = run.text.replace("{adress1}", kund.adress1)
+                if "{adress21}" in run.text:
+                    run.text = run.text.replace("{adress21}", kund.adress21)
+                if "{adress22}" in run.text:
+                    run.text = run.text.replace("{adress22}", kund.adress22)
+                if "{today}" in run.text:
+                    run.text = run.text.replace("{today}", today)                              
 
 
 # Spara det uppdaterade dokumentet
-doc.save('output.docx')
+outputDocument.save('output.docx')
