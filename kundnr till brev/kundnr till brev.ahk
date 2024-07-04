@@ -2,13 +2,36 @@
 SetTitleMatchMode 2
 WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
 AllaKundnummer := FileRead("kundnummer.txt") ; 
-Loop parse, AllaKundnummer, "`n", "`r"  
-{
-Sleep 50
 
 ; Starta Word
 Run "Förlängningsbrev Reskort Nivå 4.lnk"
-Sleep 500
+
+WinWait "Förlängningsbrev Reskort Nivå 4"
+WinWait "Förlängningsbrev Reskort Nivå 4"
+WinActivate "Förlängningsbrev Reskort Nivå 4"
+; Normalisera storlek för Word
+WinMove 50, 50, 768, 1024
+Sleep 200
+
+send "^{a}"
+Sleep 200
+send "^{c}"
+Sleep 200
+Loop parse, AllaKundnummer, "`n", "`r"  
+{
+send "{Down}"
+Sleep 100
+send "^{Enter}"
+Sleep 100
+send "^{v}"
+Sleep 100
+}
+Sleep 1000
+send "^{Home}" ; Gå till början av dokumentet
+Sleep 100
+Loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta en gång för varje kundnummer
+{
+Sleep 50
 
 Kundnummer := FileRead("kundnummer.txt") ; läs innehållet i kundnummer.txt
 WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
@@ -51,12 +74,12 @@ sleep 50
 WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
 sleep 50
 
-SendInput "^c"
+send "^c"
 Sleep 250
 A_Clipboard := StrTitle(A_Clipboard)
 Sleep 50
 
-if (InStr(A_Clipboard, "-")) { 
+if (InStr(A_Clipboard, "-")) { ; Gör så att det är Stor Bokstav i början av dubbelnamn
     parts := StrSplit(A_Clipboard, "-")
     modifiedClipboard := ""
     for index, part in parts {
@@ -66,21 +89,23 @@ if (InStr(A_Clipboard, "-")) {
     modifiedClipboard := RTrim(modifiedClipboard, "-")
     A_Clipboard := modifiedClipboard
 }
-; Gör så att det är Stor Bokstav i början av dubbelnamn
+
 
 ; Lägg in förnamn i Word
+sleep 50
+
 WinWait "Förlängningsbrev Reskort Nivå 4"
 WinActivate "Förlängningsbrev Reskort Nivå 4"
-WinMaximize "Förlängningsbrev Reskort Nivå 4"
-sleep 50
-send "{PgUp}"
-sleep 50
+; Normalisera storlek för Word
+WinMove 50, 50, 768, 1024
+
+sleep 10
 send "{F11}"
-sleep 50
+sleep 10
 send "^{v}"
-sleep 50
+sleep 10
 send " "
-sleep 50
+sleep 10
 
 
 ; Hitta efternamn
@@ -97,6 +122,17 @@ sleep 50
 send "^{c}"
 sleep 50
 A_Clipboard := StrTitle(A_Clipboard)
+
+if (InStr(A_Clipboard, "-")) { ; Gör så att det är Stor Bokstav i början av dubbelefternamn
+    parts := StrSplit(A_Clipboard, "-")
+    modifiedClipboard := ""
+    for index, part in parts {
+        modifiedPart := StrTitle(part)
+        modifiedClipboard .= modifiedPart . "-"
+    }
+    modifiedClipboard := RTrim(modifiedClipboard, "-")
+    A_Clipboard := modifiedClipboard
+}
 sleep 50
 
 ; Lägg in efternamn i Word
@@ -164,38 +200,29 @@ sleep 50
 ; Lägg in postort i Word
 WinActivate "Förlängningsbrev Reskort Nivå 4"
 send "^{v}"
+
+
 ; Lägg in datum i Word
+sleep 50
 send "{F11}"
+sleep 50
 send "{F11}"
+sleep 50
 
-MouseMove 150, 50 ; Tryck infoga
-MouseClick
-sleep 150
-
-MouseMove 1660, 100 ; Tryck datum och tid
-MouseClick
-sleep 500
-send "^{Enter}"
-sleep 1000
-
-; Printa
-send "^{p}"
-sleep 4000
-MouseMove 220, 140 ; Tryck printa
-MouseClick
-sleep 6000
-
-; Stäng word 
-WinActivate "Förlängningsbrev Reskort Nivå 4"
-MouseMove 1900, 10 ; Tryck kryss
-MouseClick
-sleep 6000
-
-; WinActivate "Microsoft Word" Kommenterade eftersom vissa datorer inte hittar titel på fönstret. Den verkar autofokusa ändå
-sleep 500
-send "{Tab}" ; Tryck spara inte
+send "{Alt}{n}"
+send "{d}{a}"
 send "{Enter}"
-sleep 2000
+sleep 200
+
+send "{F5}"
+sleep 200
+send "{Raw}+1"
+sleep 200
+send "{Enter}"
+sleep 200
+send "{Esc}"
+
+
 
 ; Gå ur kontot på Bookit
 WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
