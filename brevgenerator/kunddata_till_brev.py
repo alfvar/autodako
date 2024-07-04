@@ -62,4 +62,4 @@ with open(kunddata, newline='', encoding='utf-8') as csvfile:
 		# baserat på kunddata, t.ex. ersätta platshållartext med faktiska värden
 
 # Spara det uppdaterade dokumentet
-doc.save('uppdaterad_nv4.docx')
+doc.save('output.docx')
