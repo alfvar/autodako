@@ -38,7 +38,7 @@ jobs:
 
       - name: Generate Tag
         id: generate_tag
-        run: echo "::set-output name=tag::v0.0.1"
+        run: echo "::set-output name=tag::v0.0.2"
 
       - name: Create Release
         id: create_release
