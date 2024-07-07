@@ -36,13 +36,18 @@ jobs:
           name: packaged-app
           path: dist/
 
+      - name: Generate Tag
+        id: generate_tag
+        run: echo "::set-output name=tag::v0.0.1"
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.event.head_commit.message }}
-          release_name: ${{ github.event.head_commit.message }}
+          tag_name: ${{ steps.generate_tag.outputs.tag }}
+          release_name: Release ${{ steps.generate_tag.outputs.tag }}
           draft: false
-          prerelease: false
+		  overwrite: true
+		  prerelease: false
