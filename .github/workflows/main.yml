@@ -5,7 +5,7 @@ on: [push]
 defaults:
   run:
     shell: bash
-    working-directory: app
+    working-directory: brevgenerator
 
 jobs:
   Build:
@@ -39,7 +39,7 @@ jobs:
         run: pytest
 
       - name: Build with pyinstaller
-        run: pyinstaller --onefile --name=app-${{ matrix.os }} main.py
+        run: pyinstaller --onefile --name=app-${{ matrix.os }} kunddata_till_brev.py
 
       - name: Deploy artifacts
         uses: actions/upload-artifact@v2
