@@ -47,4 +47,3 @@ jobs:
           draft: false
           prerelease: false
           body: "This is a release"
-		  
