@@ -1,2 +1,6 @@
 brevgenerator/kundnummer.txt
-brevgenerator/output.docx
+brevgenerator/*.docx
+brevgenerator/*
+!brevgenerator/nv4.docx
+*/.DS_Store
+.DS_Store
