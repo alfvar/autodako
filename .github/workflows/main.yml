@@ -28,7 +28,7 @@ jobs:
 
       - name: Package Application
         run: |
-          pyinstaller --onefile kunddata_till_brev.py
+          pyinstaller --onefile brevgenerator/kunddata_till_brev.py
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
