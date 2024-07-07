@@ -33,7 +33,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: packaged-app
+          name: kunddata_till_brev
           path: dist/
 
       - name: Generate Tag
@@ -48,5 +48,14 @@ jobs:
         with:
           tag_name: ${{ steps.generate_tag.outputs.tag }}
           release_name: Release ${{ steps.generate_tag.outputs.tag }}
-          overwrite: true
           prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/kunddata_till_brev.zip
+          asset_name: kunddata_till_brev.zip
+          asset_content_type: application/zip
