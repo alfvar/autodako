@@ -4,8 +4,8 @@ on: push
 
 jobs:
 
-  brevgenerator:
-    name: build-brevgenerator
+  autodako:
+    name: build-autodako
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -14,12 +14,12 @@ jobs:
       - name: Ahk2Exe
         uses: nekocodeX/GitHub-Action-Ahk2Exe@main
         with:
-          in: brevgenerator/kundnr_till_brev.ahk
+          in: autodako/autodako.ahk
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: brevgenerator.exe
+          files: autodako.exe
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
