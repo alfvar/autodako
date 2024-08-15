@@ -7,6 +7,10 @@ jobs:
     name: build-autodako
     runs-on: windows-latest
     steps:
+      - name: Generate Tag
+        id: generate_tag
+        run: echo "::set-output name=tag::$(date +'%Y%m%d%H%M%S')"
+      
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -23,11 +27,8 @@ jobs:
         with:
           tag_name: ${{ steps.generate_tag.outputs.tag }}
           release_name: Release ${{ steps.generate_tag.outputs.tag }}
-
           prerelease: false
-      - name: Generate Tag
-        id: generate_tag
-        run: echo "::set-output name=tag::$(date +'%Y%m%d%H%M%S')"
+
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
