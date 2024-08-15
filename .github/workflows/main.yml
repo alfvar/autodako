@@ -3,7 +3,6 @@ name: Build scripts
 on: push
 
 jobs:
-
   autodako:
     name: build-autodako
     runs-on: windows-latest
@@ -15,12 +14,27 @@ jobs:
         uses: CCCC-L/Action-Ahk2Exe@main
         with:
           in: autodako/autodako.ahk
-          icon: icons/edvin.ico
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: autodako.exe
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.generate_tag.outputs.tag }}
+          release_name: Release ${{ steps.generate_tag.outputs.tag }}
+
+          prerelease: false
+      - name: Generate Tag
+        id: generate_tag
+        run: echo "::set-output name=tag::$(date +'%Y%m%d%H%M%S')"
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/kunddata_till_brev
+          asset_name: kunddata_till_brev
+          asset_content_type: application/octet-stream
