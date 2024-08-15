@@ -88,6 +88,9 @@ if (InStr(A_Clipboard, "-")) { ; Gör så att det är Stor Bokstav i början av 
     }
     modifiedClipboard := RTrim(modifiedClipboard, "-")
     A_Clipboard := modifiedClipboard
+} else {
+Sleep 50
+A_Clipboard := StrTitle(A_Clipboard)
 }
 
 
