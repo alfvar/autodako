@@ -17,14 +17,14 @@ SetTitleMatchMode 2
 
 findCard() {
 
-WinActivate "Bokning - http://prod.gonet.se/bookit/" || "Check-in - http://prod.gonet.se/bookit/"
+WinActivate "ahk_group Checkin"
 
 
 MouseMove 620, 450
 Sleep 100
 
 MouseGetPos , , &id, &control
-Kundnr := ControlGetText(control, "Bokning - http://prod.gonet.se/bookit/" || "Check-in - http://prod.gonet.se/bookit/")
+Kundnr := ControlGetText(control, "ahk_group Checkin")
 if !RegExMatch(Kundnr, "^\d+$")
 {
     Throw ValueError("Scriptet kördes inte inuti en bokning")
