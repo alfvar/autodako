@@ -4,8 +4,11 @@ SetTitleMatchMode 2
 
 ; Disable the F6 key
 F6::return
+GroupAdd "Checkin", "Check-in - http://prod.gonet.se/bookit/"
+GroupAdd "Checkin", "Bokning - http://prod.gonet.se/bookit/"
 
-HotIfWinActive "Bokning - http://prod.gonet.se/bookit/" || "Check-in - http://prod.gonet.se/bookit/"
+#HotIf WinActive("ahk_group Checkin")
+
 CoordMode "Mouse", "Window"
 SetKeyDelay 100
 
@@ -14,7 +17,7 @@ SetTitleMatchMode 2
 
 findCard() {
 
-WinActivate "Bokning - http://prod.gonet.se/bookit/" || "Check-in - http://prod.gonet.se/bookit/" ;
+WinActivate "Bokning - http://prod.gonet.se/bookit/" || "Check-in - http://prod.gonet.se/bookit/"
 
 
 MouseMove 620, 450
@@ -22,22 +25,54 @@ Sleep 100
 
 MouseGetPos , , &id, &control
 Kundnr := ControlGetText(control, "Bokning - http://prod.gonet.se/bookit/" || "Check-in - http://prod.gonet.se/bookit/")
+if !RegExMatch(Kundnr, "^\d+$")
+{
+    Throw ValueError("Scriptet kördes inte inuti en bokning")
+}
 A_Clipboard := Kundnr
 Sleep 100
 
 WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
-Sleep 100
+Sleep 10
 
 send "{Esc}"
+
 Sleep 100
+
+
+if  WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+    WinActivate "Ändringar har gjorts"
+    Loop  {
+        if not WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+        break
+    }
+
 WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
 
 send "{Esc}"
 Sleep 100
+
+
+if  WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+    WinActivate "Ändringar har gjorts"
+    Loop  {
+        if not WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+        break
+    }
+
 WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
 
 send "{Esc}"
 Sleep 100
+
+
+if  WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+    WinActivate "Ändringar har gjorts"
+    Loop  {
+        if not WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+        break
+    }
+
 WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
 send "{Esc}" ; ifall man är inne i nånting redan
 
