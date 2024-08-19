@@ -9,8 +9,10 @@ jobs:
     steps:
       - name: Generate Tag
         id: generate_tag
-        run: echo "::set-output name=tag::$(date +'%Y%m%d%H%M%S')"
-      
+        run: |
+          DATE=$(date +'%Y-%m-%d')
+          HASH=$(git rev-parse --short HEAD)
+          echo "::set-output name=tag::${DATE}_${HASH}"      
       - name: Checkout
         uses: actions/checkout@v2
 
