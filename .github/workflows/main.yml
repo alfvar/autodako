@@ -18,8 +18,8 @@ jobs:
         uses: CCCC-L/Action-Ahk2Exe@main
         with:
           in: autodako/autodako.ahk
-        include: |
-            autodako/edvin.ico
+        addFiles: |
+          autodako/edvin.ico
 
       - name: Create Release
         id: create_release
