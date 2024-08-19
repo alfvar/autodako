@@ -76,33 +76,34 @@ Loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
             break
         }
 
-    WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+ WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
     send "{Esc}" ; ifall man är inne i nånting redan
 
-    MouseMove 50, 125 ; flytta musen till "filter"
+    MouseMove 50, 95 ; flytta musen till "filter"
     MouseClick
-    Sleep 200
+    Sleep 100
 
     send "^{a}"
-    Sleep 200
+    Sleep 100
 
     send "{Del}"
-    Sleep 200
+    Sleep 100
 
     Send "kunder"
-    Sleep 200
+    Sleep 100
 
-    MouseMove 70, 175 ; flytta musen till "kunder"
+    MouseMove 70, 140 ; flytta musen till "kunder"
     MouseClick
-    Sleep 200
+    Sleep 100
 
-    MouseMove 250, 128 ; flytta musen till kundnr
-    Sleep 200
+    MouseMove 250, 90 ; flytta musen till kundnr
+    Sleep 100
 
-    MouseClick  
+    MouseClick
+    Sleep 100    
     Send A_LoopField
     send "{Home}"
-
+    Sleep 100
     MouseMove 300, 240 ; Öppna profilen
     MouseClick
     MouseClick
