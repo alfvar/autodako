@@ -8,7 +8,7 @@ jobs:
     runs-on: windows-latest
     defaults:
       run:
-        working-directory: ./scripts
+        working-directory: autodako
     steps:
       - name: Generate Tag
         id: generate_tag
