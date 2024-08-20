@@ -9,19 +9,15 @@ jobs:
     steps:
       - name: Generate Tag
         id: generate_tag
-        run: echo "::set-output name=tag::$(date +'%Y%m%d%H%M')"
+        run: echo "::set-output name=tag::$(date +'%Y%m%d%H%M%S')"
       
       - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: List Directory Contents
-        run: dir
+        uses: actions/checkout@v2
 
       - name: Ahk2Exe
         uses: CCCC-L/Action-Ahk2Exe@main
         with:
-          in: autodako.ahk
-        working-directory: autodako
+          in: autodako/autodako.ahk
 
       - name: Create Release
         id: create_release
@@ -32,6 +28,7 @@ jobs:
           tag_name: ${{ steps.generate_tag.outputs.tag }}
           release_name: Release ${{ steps.generate_tag.outputs.tag }}
           prerelease: false
+
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
