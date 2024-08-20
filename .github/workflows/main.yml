@@ -16,8 +16,8 @@ jobs:
 
       - name: Ahk2Exe
         uses: CCCC-L/Action-Ahk2Exe@main
-        run:
-          working-directory: autodako
+
+        working-directory: autodako
         with:
           in: autodako.ahk
 
