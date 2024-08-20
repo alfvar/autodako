@@ -1,5 +1,3 @@
-name: Build scripts
-
 on: push
 
 jobs:
@@ -14,10 +12,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: List Directory Contents
+        run: dir autodako
+
       - name: Ahk2Exe
         uses: CCCC-L/Action-Ahk2Exe@main
         with:
           in: autodako/autodako.ahk
+        working-directory: autodako
 
       - name: Create Release
         id: create_release
@@ -28,7 +30,6 @@ jobs:
           tag_name: ${{ steps.generate_tag.outputs.tag }}
           release_name: Release ${{ steps.generate_tag.outputs.tag }}
           prerelease: false
-
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
