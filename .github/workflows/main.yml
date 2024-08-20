@@ -6,9 +6,6 @@ jobs:
   autodako:
     name: build-autodako
     runs-on: windows-latest
-    defaults:
-      run:
-        working-directory: autodako
     steps:
       - name: Generate Tag
         id: generate_tag
@@ -19,8 +16,10 @@ jobs:
 
       - name: Ahk2Exe
         uses: CCCC-L/Action-Ahk2Exe@main
+        run:
+          working-directory: autodako
         with:
-          in: autodako/autodako.ahk
+          in: autodako.ahk
 
       - name: Create Release
         id: create_release
