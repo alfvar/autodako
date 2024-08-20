@@ -6,6 +6,9 @@ jobs:
   autodako:
     name: build-autodako
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ./scripts
     steps:
       - name: Generate Tag
         id: generate_tag
@@ -14,18 +17,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Verify Icon File
-        run: |
-          if [ ! -f autodako/edvin.ico ]; then
-            echo "Icon file not found!"
-            exit 1
-          fi
-
       - name: Ahk2Exe
         uses: CCCC-L/Action-Ahk2Exe@main
         with:
           in: autodako/autodako.ahk
-        working-directory: autodako
 
       - name: Create Release
         id: create_release
@@ -36,6 +31,7 @@ jobs:
           tag_name: ${{ steps.generate_tag.outputs.tag }}
           release_name: Release ${{ steps.generate_tag.outputs.tag }}
           prerelease: false
+
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
