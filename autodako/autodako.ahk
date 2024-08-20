@@ -6,7 +6,6 @@ GroupAdd "Checkin", "Bokning - http://prod.gonet.se/bookit/"
 #HotIf WinActive("ahk_group Checkin")
 CoordMode "Mouse", "Window"
 SetKeyDelay 100
-;@Ahk2Exe-SetMainIcon "edvin.ico"
 
 F7::dakob() ; Flytta musen till rutan för DAKOB
 dakob() {
