@@ -18,6 +18,7 @@ jobs:
         uses: CCCC-L/Action-Ahk2Exe@main
         with:
           in: autodako/autodako.ahk
+        icon: autodako/edvin.ico
 
       - name: Create Release
         id: create_release
@@ -28,7 +29,6 @@ jobs:
           tag_name: ${{ steps.generate_tag.outputs.tag }}
           release_name: Release ${{ steps.generate_tag.outputs.tag }}
           prerelease: false
-
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
