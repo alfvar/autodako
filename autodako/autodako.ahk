@@ -1,5 +1,4 @@
 #Requires AutoHotkey v2
-;@Ahk2Exe-SetMainIcon "edvin.ico"
 
 End::ExitApp
 SetTitleMatchMode 2
