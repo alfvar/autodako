@@ -18,9 +18,10 @@ jobs:
         uses: alfvar/action-ahk2exe@main
         with:
           in: autodako/autodako.ahk
+      
+      - name: Log output directory
+        run: echo "Output directory: ${{ steps.ahk2exe.outputs.out }}"
 
-      - name: Log Output Path
-        run: echo "Output Path: autodako/autodako.exe"
 
       - name: Create Release
         id: create_release
