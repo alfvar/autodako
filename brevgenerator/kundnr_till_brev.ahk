@@ -79,7 +79,7 @@ Loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
  WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
     send "{Esc}" ; ifall man är inne i nånting redan
 
-    MouseMove 50, 95 ; flytta musen till "filter"
+    Send("+{Tab}") ; flytta musen till "filter"
     MouseClick
     Sleep 100
 
