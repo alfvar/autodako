@@ -1,41 +1,24 @@
-name: Build scripts
+name: Example usage of GitHub-Action-Ahk2Exe and softprops/action-gh-release
 
 on: push
 
 jobs:
-  autodako:
-    name: build-autodako
+  Build:
+    name: Build
     runs-on: windows-latest
     steps:
-      - name: Generate Tag
-        id: generate_tag
-        run: echo "::set-output name=tag::$(date +'%Y%m%d%H%M%S')"
-      
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Ahk2Exe
-        id: ahk2exe
-        uses: alfvar/action-ahk2exe@main
+        uses: nekocodeX/GitHub-Action-Ahk2Exe@main
         with:
-          in: autodako/autodako.ahk
+          in: brevgenerator/kundnr_till_brev.ahk
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          tag_name: ${{ steps.generate_tag.outputs.tag }}
-          release_name: Release ${{ steps.generate_tag.outputs.tag }}
-          prerelease: false
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
+          files: brevgenerator/kundnr_till_brev.exe
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./autodako/autodako.exe
-          asset_name: autodako.exe
-          asset_content_type: application/octet-stream
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
