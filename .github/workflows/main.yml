@@ -24,7 +24,8 @@ jobs:
         in: example.ahk
 
     - name: Log output directory
-      run: echo "Output directory: ${{ steps.ahk2exe.outputs.out }}"
+      run: |
+        echo "Output directory: ${{ steps.ahk2exe.outputs.out }}"
 
     - name: Create Release
       id: create_release
