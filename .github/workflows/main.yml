@@ -21,7 +21,7 @@ jobs:
       id: ahk2exe
       uses: CCCC-L/Action-Ahk2Exe@main
       with:
-        in: example.ahk
+        in: brevgenerator/kundnr_till_brev.ahk
 
     - name: Log output directory
       run: |
