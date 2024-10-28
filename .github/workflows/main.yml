@@ -1,24 +1,47 @@
-name: Example usage of GitHub-Action-Ahk2Exe and softprops/action-gh-release
+name: Install ahkv2 on Windows
 
-on: push
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  Build:
-    name: Build
+  build:
     runs-on: windows-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Ahk2Exe
-        uses: nekocodeX/GitHub-Action-Ahk2Exe@main
-        with:
-          in: brevgenerator/kundnr_till_brev.ahk
+    - name: Generate Tag
+      id: generate_tag
+      run: echo "::set-output name=tag::$(date +'%Y%m%d%H%M%S')"
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: brevgenerator/kundnr_till_brev.exe
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    - name: Ahk2Exe
+      id: ahk2exe
+      uses: CCCC-L/Action-Ahk2Exe@main
+      with:
+        in: example.ahk
+
+    - name: Log output directory
+      run: echo "Output directory: ${{ steps.ahk2exe.outputs.out }}"
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.generate_tag.outputs.tag }}
+        release_name: Release ${{ steps.generate_tag.outputs.tag }}
+        prerelease: false
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ steps.ahk2exe.outputs.out }}
+        asset_name: example.exe
+        asset_content_type: application/octet-stream
