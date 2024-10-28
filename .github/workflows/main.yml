@@ -23,9 +23,8 @@ jobs:
       with:
         in: brevgenerator/kundnr_till_brev.ahk
 
-    - name: Log output directory
-      run: |
-        echo "Output directory: ${{ steps.ahk2exe.outputs.out }}"
+    - name: List directory contents
+      run: dir
 
     - name: Create Release
       id: create_release
