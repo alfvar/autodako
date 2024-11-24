@@ -1,7 +1,7 @@
-﻿End::ExitApp
+﻿End:: ExitApp
 SetTitleMatchMode 2
 WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
-AllaKundnummer := FileRead("kundnummer.txt") ; 
+AllaKundnummer := FileRead("kundnummer.txt") ;
 SetKeyDelay 100
 
 ; Starta Word
@@ -14,12 +14,13 @@ WinActivate "Förlängningsbrev Reskort Nivå 4"
 WinMove 50, 50, 768, 1024
 Sleep 200
 
+A_Clipboard := "" ; Empty the clipboard
 send "^{a}"
 Sleep 200
 send "^{c}"
+ClipWait 2
 Sleep 200
-Loop parse, AllaKundnummer, "`n", "`r"  
-{
+loop parse, AllaKundnummer, "`n", "`r" {
     send "{Down}"
     Sleep 100
     send "^{Enter}"
@@ -30,53 +31,51 @@ Loop parse, AllaKundnummer, "`n", "`r"
 Sleep 1000
 send "^{Home}" ; Gå till början av dokumentet
 Sleep 100
-Loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta en gång för varje kundnummer
+loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta en gång för varje kundnummer
 {
+
     Sleep 50
 
     Kundnummer := FileRead("kundnummer.txt") ; läs innehållet i kundnummer.txt
     WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
-    Sleep 10
+    Sleep 50
 
     send "{Esc}" ; ifall man är inne i nånting redan
 
     Sleep 100
 
-
-    if  WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+    if WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
         WinActivate "Ändringar har gjorts"
-        Loop  {
-            if not WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+    loop {
+        if not WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
             break
-        }
+    }
 
     WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
 
     send "{Esc}"
     Sleep 100
 
-
-    if  WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+    if WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
         WinActivate "Ändringar har gjorts"
-        Loop  {
-            if not WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+    loop {
+        if not WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
             break
-        }
+    }
 
     WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
 
     send "{Esc}"
     Sleep 100
 
-
-    if  WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+    if WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
         WinActivate "Ändringar har gjorts"
-        Loop  {
-            if not WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+    loop {
+        if not WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
             break
-        }
+    }
 
- WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+    WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
     send "{Esc}" ; ifall man är inne i nånting redan
 
     Send("+{Tab}") ; flytta musen till "filter"
@@ -100,7 +99,7 @@ Loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     Sleep 100
 
     MouseClick
-    Sleep 100    
+    Sleep 100
     Send A_LoopField
     send "{Home}"
     Sleep 100
@@ -120,9 +119,11 @@ Loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     ; Kopiera förnamn
     WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
     sleep 50
-
-    send "^c"
+    A_Clipboard := "" ; Empty the clipboard
+    sleep 50
+    send "^{c}"
     Sleep 250
+    ClipWait 2
     A_Clipboard := StrTitle(A_Clipboard)
     Sleep 50
 
@@ -136,10 +137,9 @@ Loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
         modifiedClipboard := RTrim(modifiedClipboard, "-")
         A_Clipboard := modifiedClipboard
     } else {
-    Sleep 50
-    A_Clipboard := StrTitle(A_Clipboard)
+        Sleep 50
+        A_Clipboard := StrTitle(A_Clipboard)
     }
-
 
     ; Lägg in förnamn i Word
     sleep 50
@@ -157,7 +157,6 @@ Loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     send " "
     sleep 10
 
-
     ; Hitta efternamn
     WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
     sleep 50
@@ -168,8 +167,13 @@ Loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     send "^{a}"
     sleep 50
 
-    ; Kopiera efternamn 
+    ; Kopiera efternamn
+    sleep 50
+    A_Clipboard := "" ; Empty the clipboard
+    sleep 50
     send "^{c}"
+    Sleep 250
+    ClipWait 2
     sleep 50
     A_Clipboard := StrTitle(A_Clipboard)
 
@@ -194,7 +198,6 @@ Loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     send "{F11}"
     sleep 50
 
-
     ; Hitta adress 1
     WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
     sleep 50
@@ -204,7 +207,12 @@ Loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
 
     send "^{a}"
     ; Kopiera adress 1
+    sleep 50
+    A_Clipboard := "" ; Empty the clipboard
+    sleep 50
     send "^{c}"
+    Sleep 250
+    ClipWait 2
     sleep 50
 
     A_Clipboard := StrTitle(A_Clipboard) ; gör så att "lgh" alltid har små bokstäver
@@ -214,7 +222,6 @@ Loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     }
 
     sleep 50
-
 
     ; Lägg in adress 1 i Word
     WinActivate "Förlängningsbrev Reskort Nivå 4"
@@ -228,7 +235,12 @@ Loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     send "^{a}"
 
     ; Kopiera postnummer
+    sleep 50
+    A_Clipboard := "" ; Empty the clipboard
+    sleep 50
     send "^{c}"
+    Sleep 250
+    ClipWait 2
     sleep 50
 
     ; Lägg in postnummer i Word
@@ -240,17 +252,20 @@ Loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     ; Hitta postort
     WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
     send "{Tab}"
-    send "^{c}" ; Kopiera postort
+    sleep 50
+    A_Clipboard := "" ; Empty the clipboard
+    sleep 50
+    send "^{c}"
+    Sleep 250
+    ClipWait 2
     sleep 50
 
     A_Clipboard := StrTitle(A_Clipboard)
     sleep 50
 
-
     ; Lägg in postort i Word
     WinActivate "Förlängningsbrev Reskort Nivå 4"
     send "^{v}"
-
 
     ; Lägg in datum i Word
     sleep 50
@@ -271,8 +286,6 @@ Loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     send "{Enter}"
     sleep 200
     send "{Esc}"
-
-
 
     ; Gå ur kontot på Bookit
     WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
