@@ -1,8 +1,16 @@
 ﻿End:: ExitApp
 SetTitleMatchMode 2
+WinMinimizeAll
+Sleep 200
+WinRestore "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+Sleep 100
 WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+Sleep 100
+WinMove 800, 50 ; Normalisera plats för Bookit
 AllaKundnummer := FileRead("kundnummer.txt") ;
 SetKeyDelay 100
+
+; Kolla om man kan minimera alla fönster utom de man är i??
 
 ; Starta Word
 Run "Förlängningsbrev Reskort Nivå 4.lnk"
@@ -10,8 +18,7 @@ Run "Förlängningsbrev Reskort Nivå 4.lnk"
 WinWait "Förlängningsbrev Reskort Nivå 4"
 WinWait "Förlängningsbrev Reskort Nivå 4"
 WinActivate "Förlängningsbrev Reskort Nivå 4"
-; Normalisera storlek för Word
-WinMove 50, 50, 768, 1024
+WinMove 50, 50, 768, 1024 ; Normalisera storlek för Word
 Sleep 200
 
 A_Clipboard := "" ; Empty the clipboard
@@ -146,8 +153,6 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
 
     WinWait "Förlängningsbrev Reskort Nivå 4"
     WinActivate "Förlängningsbrev Reskort Nivå 4"
-    ; Normalisera storlek för Word
-    WinMove 50, 50, 768, 1024
 
     sleep 10
     send "{F11}"
@@ -266,16 +271,19 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     ; Lägg in postort i Word
     WinActivate "Förlängningsbrev Reskort Nivå 4"
     send "^{v}"
+    sleep 200
 
     ; Lägg in datum i Word
-    sleep 50
+    sleep 200
     send "{F11}"
-    sleep 50
+    sleep 200
     send "{F11}"
-    sleep 50
+    sleep 300
 
     send "{Alt}{n}"
+    sleep 200
     send "{d}{a}"
+    sleep 200
     send "{Enter}"
     sleep 200
 
