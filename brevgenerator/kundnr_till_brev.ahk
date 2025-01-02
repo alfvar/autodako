@@ -1,6 +1,6 @@
 ﻿End:: ExitApp
 SetTitleMatchMode 2
-WinMinimizeAll
+; WinMinimizeAll
 Sleep 400
 WinRestore "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
 Sleep 400
