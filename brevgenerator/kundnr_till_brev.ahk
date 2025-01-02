@@ -21,6 +21,7 @@ WinActivate "Förlängningsbrev Reskort Nivå 4"
 WinMove 50, 50, 768, 1024 ; Normalisera storlek för Word
 Sleep 200
 
+WinActivate "Förlängningsbrev Reskort Nivå 4" ; Fokusera på Word
 A_Clipboard := "" ; Empty the clipboard
 send "^{a}"
 Sleep 200
