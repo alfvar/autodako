@@ -2,9 +2,9 @@
 SetTitleMatchMode 2
 WinMinimizeAll
 Sleep 200
-WinRestore "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+WinRestore "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
 Sleep 100
-WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
 Sleep 100
 WinMove 800, 50 ; Normalisera plats för Bookit
 AllaKundnummer := FileRead("kundnummer.txt") ;
@@ -45,7 +45,7 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     Sleep 50
 
     Kundnummer := FileRead("kundnummer.txt") ; läs innehållet i kundnummer.txt
-    WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     Sleep 50
 
     send "{Esc}" ; ifall man är inne i nånting redan
@@ -59,7 +59,7 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
             break
     }
 
-    WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
 
     send "{Esc}"
     Sleep 100
@@ -71,7 +71,7 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
             break
     }
 
-    WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
 
     send "{Esc}"
     Sleep 100
@@ -83,7 +83,7 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
             break
     }
 
-    WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     send "{Esc}" ; ifall man är inne i nånting redan
 
     Send("+{Tab}") ; flytta musen till "filter"
@@ -117,7 +117,7 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     SetKeyDelay 25
 
     ; Hitta förnamn
-    WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     sleep 250
     MouseMove 250, 290
     MouseClick
@@ -125,7 +125,7 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     sleep 50
 
     ; Kopiera förnamn
-    WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     sleep 50
     A_Clipboard := "" ; Empty the clipboard
     sleep 50
@@ -164,7 +164,7 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     sleep 10
 
     ; Hitta efternamn
-    WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     sleep 50
 
     send "{Tab}"
@@ -205,7 +205,7 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     sleep 50
 
     ; Hitta adress 1
-    WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     sleep 50
 
     send "{Tab}"
@@ -236,7 +236,7 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     sleep 50
 
     ; Hitta postnummer
-    WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     send "{Tab}"
     send "^{a}"
 
@@ -256,7 +256,7 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     sleep 50
 
     ; Hitta postort
-    WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     send "{Tab}"
     sleep 50
     A_Clipboard := "" ; Empty the clipboard
@@ -297,7 +297,7 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     send "{Esc}"
 
     ; Gå ur kontot på Bookit
-    WinActivate "Registerunderhåll - http://prod.gonet.se/bookit/" ; Fokusera på Registerunderhåll-fönstret
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     send "{Esc}"
     send "{Esc}"
 
