@@ -99,11 +99,11 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     Send "kunder"
     Sleep 100
 
-    MouseMove 70, 170 ; flytta musen till "kunder"
+    MouseMove 70, 120 ; flytta musen till "kunder"
     MouseClick
     Sleep 100
 
-    MouseMove 250, 90 ; flytta musen till kundnr
+    MouseMove 250, 170 ; flytta musen till kundnr
     Sleep 100
 
     MouseClick
