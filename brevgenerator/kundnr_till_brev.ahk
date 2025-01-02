@@ -1,9 +1,9 @@
 ﻿End:: ExitApp
 SetTitleMatchMode 2
 WinMinimizeAll
-Sleep 200
+Sleep 400
 WinRestore "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
-Sleep 100
+Sleep 400
 WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
 Sleep 100
 WinMove 800, 50 ; Normalisera plats för Bookit
