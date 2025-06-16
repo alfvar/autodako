@@ -5,37 +5,40 @@ Sleep 400
 WinRestore "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
 Sleep 400
 WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
+WinWait "Registerunderhåll" ; 
 Sleep 100
 WinMove 800, 50 ; Normalisera plats för Bookit
 AllaKundnummer := FileRead("kundnummer.txt") ;
+kundadresser := A_WorkingDir "\kundadresser.xlsx"
 SetKeyDelay 100
 
 ; Kolla om man kan minimera alla fönster utom de man är i??
 
-; Starta Word
-Run "Förlängningsbrev Reskort Nivå 4.lnk"
 
-WinWait "Förlängningsbrev Reskort Nivå 4"
-WinWait "Förlängningsbrev Reskort Nivå 4"
-WinActivate "Förlängningsbrev Reskort Nivå 4"
-WinMove 50, 50, 768, 1024 ; Normalisera storlek för Word
-Sleep 200
+; Create and save an Excel file "kundadresser.xlsx"
+FileDelete kundadresser  ; Delete the file if it exists
 
-WinActivate "Förlängningsbrev Reskort Nivå 4" ; Fokusera på Word
-A_Clipboard := "" ; Empty the clipboard
-send "^{a}"
-Sleep 200
-send "^{c}"
-ClipWait 2
-Sleep 200
-loop parse, AllaKundnummer, "`n", "`r" {
-    send "{Down}"
-    Sleep 100
-    send "^{Enter}"
-    Sleep 100
-    send "^{v}"
-    Sleep 100
-}
+xl := ComObject("Excel.Application")
+xl.Visible := true
+wb := xl.Workbooks.Add()
+ws := wb.Worksheets(1)
+
+; Set column headers
+ws.Range("A1").Value := "name"
+ws.Range("B1").Value := "address 1"
+ws.Range("C1").Value := "postcode"
+ws.Range("D1").Value := "county"
+
+; Save the workbook in the script's directory
+wb.SaveAs(A_WorkingDir "\kundadresser.xlsx")
+
+; Close the workbook after creating it
+wb.Close()
+
+; Reopen the workbook for editing (keep open during loop)
+wb := xl.Workbooks.Open(A_WorkingDir "\kundadresser.xlsx")
+ws := wb.Worksheets(1)
+
 Sleep 1000
 send "^{Home}" ; Gå till början av dokumentet
 Sleep 100
@@ -87,30 +90,35 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     send "{Esc}" ; ifall man är inne i nånting redan
 
     Send("+{Tab}") ; flytta musen till "filter"
-    MouseClick
     Sleep 100
 
     send "^{a}"
     Sleep 100
-
-    send "{Del}"
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     Sleep 100
 
     Send "kunder"
     Sleep 100
 
-    MouseMove 70, 120 ; flytta musen till "kunder"
-    MouseClick
+    Sleep 100
+    Send("+{Tab}") ; flytta musen till kundnr
+    Sleep 100
+    Send "{Down}"    
     Sleep 100
 
-    MouseMove 250, 170 ; flytta musen till kundnr
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
+    Send "{Enter}"
     Sleep 100
-
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     MouseClick
     Sleep 100
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
+
     Send A_LoopField
     send "{Home}"
     Sleep 100
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
+
     MouseMove 300, 240 ; Öppna profilen
     MouseClick
     MouseClick
@@ -149,39 +157,34 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
         A_Clipboard := StrTitle(A_Clipboard)
     }
 
-    ; Lägg in förnamn i Word
-    sleep 50
+    ; Find the first empty row in column A
+    lastRow := ws.Cells(ws.Rows.Count, 1).End(-4162).Row ; -4162 = xlUp
+    nextRow := lastRow + 1
+    if (ws.Range("A1").Value = "")  ; If the sheet is empty
+        nextRow := 1
+    cellAddress := "A" nextRow  ; Store the cell address in a variable
 
-    WinWait "Förlängningsbrev Reskort Nivå 4"
-    WinActivate "Förlängningsbrev Reskort Nivå 4"
+    ; Write clipboard contents to the first empty cell in column A
+    ws.Range(cellAddress).Value := A_Clipboard
+    wb.Save()
 
-    sleep 10
-    send "{F11}"
-    sleep 10
-    send "^{v}"
-    sleep 10
-    send " "
-    sleep 10
-
-    ; Hitta efternamn
+ ; Hitta efternamn
     WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     sleep 50
-
-    send "{Tab}"
-    sleep 50
-
+    Send("{Tab}")
     send "^{a}"
     sleep 50
 
     ; Kopiera efternamn
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     sleep 50
     A_Clipboard := "" ; Empty the clipboard
     sleep 50
     send "^{c}"
-    Sleep 250
+    Sleep 50
     ClipWait 2
-    sleep 50
     A_Clipboard := StrTitle(A_Clipboard)
+    Sleep 50
 
     if (InStr(A_Clipboard, "-")) { ; Gör så att det är Stor Bokstav i början av dubbelefternamn
         parts := StrSplit(A_Clipboard, "-")
@@ -192,113 +195,106 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
         }
         modifiedClipboard := RTrim(modifiedClipboard, "-")
         A_Clipboard := modifiedClipboard
+    } else {
+        Sleep 50
+        A_Clipboard := StrTitle(A_Clipboard)
     }
-    sleep 50
 
-    ; Lägg in efternamn i Word
-    WinActivate "Förlängningsbrev Reskort Nivå 4"
-    sleep 50
 
-    send "^{v}"
-    sleep 50
-    send "{F11}"
-    sleep 50
+    ; Lägg till efternamn i namn
+    currentValue := ws.Range(cellAddress).Value ; Lägg till efternamn i namn
+    if (currentValue != "")
+        ws.Range(cellAddress).Value := currentValue " " A_Clipboard
+    else
+        ws.Range(cellAddress).Value := A_Clipboard
 
-    ; Hitta adress 1
+    wb.Save()
+
+ ; Hitta adress 1
     WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     sleep 50
-
-    send "{Tab}"
+    Send("{Tab}")
+    send "^{a}"
     sleep 50
 
-    send "^{a}"
     ; Kopiera adress 1
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     sleep 50
     A_Clipboard := "" ; Empty the clipboard
     sleep 50
     send "^{c}"
-    Sleep 250
+    Sleep 50
     ClipWait 2
-    sleep 50
+    A_Clipboard := StrTitle(A_Clipboard)
+    Sleep 50
 
     A_Clipboard := StrTitle(A_Clipboard) ; gör så att "lgh" alltid har små bokstäver
     sleep 50
     if (InStr(A_Clipboard, "lgh", false, 1)) {
         A_Clipboard := StrReplace(A_Clipboard, "lgh", "lgh")
     }
+    
+    cellAddress := "B" nextRow  ; Store the cell address in a variable
 
-    sleep 50
+    ; Write clipboard contents to the first empty cell in column B
+    ws.Range(cellAddress).Value := A_Clipboard
+    wb.Save()
 
-    ; Lägg in adress 1 i Word
-    WinActivate "Förlängningsbrev Reskort Nivå 4"
-    send "^{v}"
-    send "{F11}"
-    sleep 50
-
-    ; Hitta postnummer
+ ; Hitta postnummer
     WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
-    send "{Tab}"
+    sleep 50
+    Send("{Tab}")
     send "^{a}"
+    sleep 50
 
     ; Kopiera postnummer
-    sleep 50
-    A_Clipboard := "" ; Empty the clipboard
-    sleep 50
-    send "^{c}"
-    Sleep 250
-    ClipWait 2
-    sleep 50
-
-    ; Lägg in postnummer i Word
-    WinActivate "Förlängningsbrev Reskort Nivå 4"
-    send "^{v}"
-    send " " ; mellanrum efter postnummer
-    sleep 50
-
-    ; Hitta postort
     WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
-    send "{Tab}"
     sleep 50
     A_Clipboard := "" ; Empty the clipboard
     sleep 50
     send "^{c}"
-    Sleep 250
+    Sleep 50
     ClipWait 2
-    sleep 50
-
     A_Clipboard := StrTitle(A_Clipboard)
+    Sleep 50
+
+    cellAddress := "C" nextRow  ; Store the cell address in a variable
+
+    ; Write clipboard contents to the first empty cell in column C
+    ws.Range(cellAddress).Value := A_Clipboard
+    wb.Save()
+
+ ; Hitta efternamn
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
+    sleep 50
+    Send("{Tab}")
+    send "^{a}"
     sleep 50
 
-    ; Lägg in postort i Word
-    WinActivate "Förlängningsbrev Reskort Nivå 4"
-    send "^{v}"
-    sleep 200
-
-    ; Lägg in datum i Word
-    sleep 200
-    send "{F11}"
-    sleep 200
-    send "{F11}"
-    sleep 300
-
-    send "{Alt}{n}"
-    sleep 200
-    send "{d}{a}"
-    sleep 200
-    send "{Enter}"
-    sleep 200
-
-    send "{F5}"
-    sleep 200
-    send "{Raw}+1"
-    sleep 200
-    send "{Enter}"
-    sleep 200
-    send "{Esc}"
-
-    ; Gå ur kontot på Bookit
+    ; Kopiera postort
     WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
-    send "{Esc}"
-    send "{Esc}"
+    sleep 50
+    A_Clipboard := "" ; Empty the clipboard
+    sleep 50
+    send "^{c}"
+    Sleep 50
+    ClipWait 2
+    A_Clipboard := StrTitle(A_Clipboard)
+    Sleep 50
+
+
+    ; Lägg till postort i adress 2
+    currentValue := ws.Range(cellAddress).Value ; Lägg till postort i namn
+    if (currentValue != "")
+        ws.Range(cellAddress).Value := currentValue " " A_Clipboard
+    else
+        ws.Range(cellAddress).Value := A_Clipboard
+
+    wb.Save()
+
 
 }
+; Save and close after the loop
+wb.Close()      ; Close the workbook
+xl.Quit()       ; Quit the Excel application
+xl := ""        ; Release the COM object
