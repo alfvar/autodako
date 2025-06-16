@@ -26,8 +26,7 @@ ws := wb.Worksheets(1)
 ; Set column headers
 ws.Range("A1").Value := "name"
 ws.Range("B1").Value := "address 1"
-ws.Range("C1").Value := "postcode"
-ws.Range("D1").Value := "county"
+ws.Range("C1").Value := "address 2"
 
 ; Save the workbook in the script's directory
 wb.SaveAs(A_WorkingDir "\kundadresser.xlsx")
