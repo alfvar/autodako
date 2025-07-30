@@ -17,15 +17,22 @@ jobs:
       id: generate_tag
       run: echo "::set-output name=tag::$(date +'%Y%m%d%H%M%S')"
 
-    - name: Ahk2Exe
-      id: ahk2exe
+    - name: Ahk2Exe - kundnr_till_excel
+      id: ahk2exe_kundnr
       uses: CCCC-L/Action-Ahk2Exe@main
       with:
         in: brevgenerator/kundnr_till_excel.ahk
 
-    - name: Log output directory
+    - name: Ahk2Exe - autodako
+      id: ahk2exe_autodako
+      uses: CCCC-L/Action-Ahk2Exe@main
+      with:
+        in: autodako/autodako.ahk
+
+    - name: Log output directories
       run: |
-        echo "Output directory: ${{ steps.ahk2exe.outputs.out }}"
+        echo "kundnr_till_excel output directory: ${{ steps.ahk2exe_kundnr.outputs.out }}"
+        echo "autodako output directory: ${{ steps.ahk2exe_autodako.outputs.out }}"
 
     - name: Create Release
       id: create_release
@@ -37,7 +44,7 @@ jobs:
         release_name: Release ${{ steps.generate_tag.outputs.tag }}
         prerelease: false
 
-    - name: Upload Release Asset
+    - name: Upload Release Asset - kundnr_till_excel
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -45,4 +52,14 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: brevgenerator/kundnr_till_excel.exe
         asset_name: kundnr_till_excel.exe
+        asset_content_type: application/octet-stream
+
+    - name: Upload Release Asset - autodako
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: autodako/autodako.exe
+        asset_name: autodako.exe
         asset_content_type: application/octet-stream
