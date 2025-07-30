@@ -162,6 +162,10 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     A_Clipboard := StrReplace(A_Clipboard, " af ", " af ")
 }
 
+    if (InStr(A_Clipboard, " af ", false, 1)) {
+    A_Clipboard := StrReplace(A_Clipboard, " af ", " af ")
+}
+
     if (InStr(A_Clipboard, " van ", false, 1)) {
     A_Clipboard := StrReplace(A_Clipboard, " van ", " van ")
 }
