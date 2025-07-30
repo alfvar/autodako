@@ -322,5 +322,70 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     wb.Save()
 
 }
+; Exit the profile
+WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
+    Sleep 50
+
+    send "{Esc}" ; ifall man är inne i nånting redan
+
+    Sleep 100
+
+    if WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+        WinActivate "Ändringar har gjorts"
+    loop {
+        if not WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+            break
+    }
+
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
+
+    send "{Esc}"
+    Sleep 100
+
+    if WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+        WinActivate "Ändringar har gjorts"
+    loop {
+        if not WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+            break
+    }
+
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
+
+    send "{Esc}"
+    Sleep 100
+
+    if WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+        WinActivate "Ändringar har gjorts"
+    loop {
+        if not WinExist("Ändringar har gjorts") ; Kolla efter popupfönster
+            break
+    }
+
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
+    send "{Esc}" ; ifall man är inne i nånting redan
+
+    Send("+{Tab}") ; flytta musen till "filter"
+    Sleep 50
+
+    send "^{a}"
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
+    Sleep 50
+
+    Send "kunder"
+    Sleep 50
+
+    Send("+{Tab}") ; flytta musen till kundnr
+    Sleep 50
+    Send "{Down}"    
+    Sleep 50
+
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
+    Send "{Enter}"
+    Sleep 50
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
+    MouseClick
+    Sleep 50
+    WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
+
 
 xl := ""        ; Release the COM object
