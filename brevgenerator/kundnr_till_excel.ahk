@@ -89,33 +89,31 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     send "{Esc}" ; ifall man är inne i nånting redan
 
     Send("+{Tab}") ; flytta musen till "filter"
-    Sleep 100
+    Sleep 50
 
     send "^{a}"
-    Sleep 100
     WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
-    Sleep 100
+    Sleep 50
 
     Send "kunder"
-    Sleep 100
+    Sleep 50
 
-    Sleep 100
     Send("+{Tab}") ; flytta musen till kundnr
-    Sleep 100
+    Sleep 50
     Send "{Down}"    
-    Sleep 100
+    Sleep 50
 
     WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     Send "{Enter}"
-    Sleep 100
+    Sleep 50
     WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
     MouseClick
-    Sleep 100
+    Sleep 50
     WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
 
     Send A_LoopField
     send "{Home}"
-    Sleep 100
+    Sleep 50
     WinActivate "Registerunderhåll" ; Fokusera på Registerunderhåll-fönstret
 
     MouseMove 300, 240 ; Öppna profilen
@@ -155,6 +153,18 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
         Sleep 50
         A_Clipboard := StrTitle(A_Clipboard)
     }
+
+    if (InStr(A_Clipboard, " von ", false, 1)) {
+    A_Clipboard := StrReplace(A_Clipboard, " von ", " von ")
+}
+
+    if (InStr(A_Clipboard, " af ", false, 1)) {
+    A_Clipboard := StrReplace(A_Clipboard, " af ", " af ")
+}
+
+    if (InStr(A_Clipboard, " van ", false, 1)) {
+    A_Clipboard := StrReplace(A_Clipboard, " van ", " van ")
+}
 
     ; Find the first empty row in column A
     lastRow := ws.Cells(ws.Rows.Count, 1).End(-4162).Row ; -4162 = xlUp
@@ -254,7 +264,15 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     send "^{c}"
     Sleep 50
     ClipWait 2
-    A_Clipboard := StrTitle(A_Clipboard)
+    
+    ; Remove all spaces from clipboard content
+    A_Clipboard := StrReplace(A_Clipboard, " ", "")
+    
+    ; Insert space after third character if length is greater than 3
+    if (StrLen(A_Clipboard) > 3) {
+        A_Clipboard := SubStr(A_Clipboard, 1, 3) " " SubStr(A_Clipboard, 4)
+    }
+    
     Sleep 50
 
     cellAddress := "C" nextRow  ; Store the cell address in a variable
@@ -278,8 +296,20 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
     send "^{c}"
     Sleep 50
     ClipWait 2
-    A_Clipboard := StrTitle(A_Clipboard)
-    Sleep 50
+    if (InStr(A_Clipboard, "-")) { ; Gör så att det är Stor Bokstav i början av dubbelnamn
+        parts := StrSplit(A_Clipboard, "-")
+        modifiedClipboard := ""
+        for index, part in parts {
+            modifiedPart := StrTitle(part)
+            modifiedClipboard .= modifiedPart . "-"
+        }
+        modifiedClipboard := RTrim(modifiedClipboard, "-")
+        A_Clipboard := modifiedClipboard
+    } else {
+        Sleep 50
+        A_Clipboard := StrTitle(A_Clipboard)
+    }
+        Sleep 50
 
 
     ; Lägg till postort i adress 2
@@ -291,9 +321,6 @@ loop parse, AllaKundnummer, "`n", "`r"  ; Loopa igenom kundnumren och kör detta
 
     wb.Save()
 
-
 }
-; Save and close after the loop
-wb.Close()      ; Close the workbook
-xl.Quit()       ; Quit the Excel application
+
 xl := ""        ; Release the COM object
